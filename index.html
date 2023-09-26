@@ -17,10 +17,13 @@
       
       .card {
         background-color: #FFFFFF;
-        border-radius: 20px;
+        border-radius: 10px;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         padding: 30px;
         text-align: center;
+        transition: all 0.3s ease;
+        height: 50vh;
+        width: 50vw;
       }
       
       .title {
@@ -30,23 +33,33 @@
       }
       
       .riddle {
-        font-size: 48px;
+        font-size: 68px;
         font-weight: bold;
         margin-bottom: 30px;
       }
       
       .answer {
         color: #888888;
-        font-size: 30px;
+        font-size: 60px;
         margin-top: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .card.answer-visible {
+        height: 200px;
+      }
+      
+      .card.answer-visible .answer {
+        opacity: 1;
       }
     </style>
   </head>
   <body>
-    <div class="card">
+    <div class="card" id="card">
       <div class="title">随机猜歇后语</div>
       <div class="riddle" id="riddle"></div>
-      <div class="answer" id="answer" style="display:none;"></div>
+      <div class="answer" id="answer"></div>
     </div>
     <script>
       function loadJSON(callback) {
@@ -70,10 +83,11 @@
           document.getElementById("riddle").innerHTML = riddle;
           setTimeout(function() {
             document.getElementById("answer").innerHTML = answer;
-            document.getElementById("answer").style.display = "block";
+            document.getElementById("card").classList.add("answer-visible");
           }, 2000);
           setTimeout(function() {
-            document.getElementById("answer").style.display = "none";
+            document.getElementById("answer").innerHTML = "";
+            document.getElementById("card").classList.remove("answer-visible");
           }, 5000);
         });
       }
