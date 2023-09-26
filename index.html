@@ -1,41 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Random Riddle</title>
+<meta charset="UTF-8">
+<title>随机猜歇后语</title>
+<style>
+body {
+background-color: #F5F5F5;
+font-family: 'Arial', sans-serif;
+margin: 0;
+padding: 0;
+}
+
+  .card {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .riddle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
+  .answer {
+    color: #888888;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+</style>
 </head>
 <body>
-  <h1 id="riddle"></h1>
-  <p id="answer" style="display:none;"></p>
-  <script>
-    function loadJSON(callback) {
-      var xobj = new XMLHttpRequest();
-      xobj.overrideMimeType("application/json");
-      xobj.open('GET', './xiehouyu_202309261345.json', true);
-      xobj.onreadystatechange = function () {
-        if (xobj.readyState == 4 && xobj.status == 200) {
-          callback(xobj.responseText);
-        }
-      };
-      xobj.send(null);
-    }
+<div class="card">
+<div class="title">随机猜歇后语</div>
+<div class="riddle" id="riddle"></div>
+<div class="answer" id="answer" style="display:none;"></div>
+</div>
+<script>
+function loadJSON(callback) {
+var xobj = new XMLHttpRequest();
+xobj.overrideMimeType("application/json");
+xobj.open('GET', './xiehouyu_202309261345.json', true);
+xobj.onreadystatechange = function () {
+if (xobj.readyState == 4 && xobj.status == 200) {
+callback(xobj.responseText);
+}
+};
+xobj.send(null);
+}
 
-    function showRiddle() {
-      loadJSON(function(response) {
-        var riddles = JSON.parse(response).xiehouyu;
-        var randomIndex = Math.floor(Math.random() * riddles.length);
-        var riddle = riddles[randomIndex].riddle;
-        var answer = riddles[randomIndex].answer;
-        document.getElementById("riddle").innerHTML = riddle;
-        setTimeout(function() {
-          document.getElementById("answer").innerHTML = answer;
-          document.getElementById("answer").style.display = "block";
-        }, 2000);
-      });
-    }
+  function showRiddle() {
+    loadJSON(function(response) {
+      var riddles = JSON.parse(response).xiehouyu;
+      var randomIndex = Math.floor(Math.random() * riddles.length);
+      var riddle = riddles[randomIndex].riddle;
+      var answer = riddles[randomIndex].answer;
+      document.getElementById("riddle").innerHTML = riddle;
+      setTimeout(function() {
+        document.getElementById("answer").innerHTML = answer;
+        document.getElementById("answer").style.display = "block";
+      }, 2000);
+    });
+  }
 
-    showRiddle();
-    setInterval(showRiddle, 5000);
-  </script>
+  showRiddle();
+  setInterval(showRiddle, 5000);
+</script>
 </body>
 </html>
