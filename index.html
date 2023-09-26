@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Random Riddle</title>
+</head>
+<body>
+  <h1 id="riddle"></h1>
+  <p id="answer" style="display:none;"></p>
+  <script>
+    function loadJSON(callback) {
+      var xobj = new XMLHttpRequest();
+      xobj.overrideMimeType("application/json");
+      xobj.open('GET', './xiehouyu_202309261345.json', true);
+      xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == 200) {
+          callback(xobj.responseText);
+        }
+      };
+      xobj.send(null);
+    }
+
+    function showRiddle() {
+      loadJSON(function(response) {
+        var riddles = JSON.parse(response).xiehouyu;
+        var randomIndex = Math.floor(Math.random() * riddles.length);
+        var riddle = riddles[randomIndex].riddle;
+        var answer = riddles[randomIndex].answer;
+        document.getElementById("riddle").innerHTML = riddle;
+        setTimeout(function() {
+          document.getElementById("answer").innerHTML = answer;
+          document.getElementById("answer").style.display = "block";
+        }, 2000);
+      });
+    }
+
+    showRiddle();
+    setInterval(showRiddle, 5000);
+  </script>
+</body>
+</html>

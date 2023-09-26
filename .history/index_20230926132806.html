@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>随机诗歌</title>
+    <style>
+      body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        text-align: center;
+      }
+      
+      #poem {
+        margin-top: 20%;
+        padding: 10px;
+        border: 2px solid #333;
+        border-radius: 10px;
+        background-color: #fff;
+        max-width: 80%;
+        text-align: left;
+        white-space: pre-line;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="poem"></div>
+    <script src="js/sql-wasm.js"></script>
+    <script>
+      // 异步加载 SQLite 数据库文件
+      function loadDatabase(callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'Data_xiehouyu.db', true);
+        xhr.responseType = 'arraybuffer';
+        
+        xhr.onload = function() {
+          const uInt8Array = new Uint8Array(this.response);
+          const db = new SQL.Database(uInt8Array);
+          callback(db);
+        };
+        
+        xhr.send();
+      }
+      
+      // 从数据库中随机获取一条诗歌
+      function getPoem(db) {
+        const query = "SELECT riddle, answer FROM xiehouyu ORDER BY RANDOM() LIMIT 1";
+        const result = db.exec(query);
+        const poem = result[0].values[0][0];
+        
+        const poemDiv = document.getElementById('poem');
+        poemDiv.innerText = poem;
+      }
+      
+      // 加载数据库并启动定时器
+      loadDatabase(function(db) {
+        getPoem(db);  // 初始化显示一首诗歌
+        setInterval(function() {
+          getPoem(db);
+        }, 5000);  // 每隔5秒刷新诗歌
+      });
+    </script>
+  </body>
+</html>
